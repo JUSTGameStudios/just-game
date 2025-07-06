@@ -215,8 +215,8 @@
                 <div class="score-value" id="score1">0</div>
             </div>
             <div class="score">
-                <div class="score-label">Rounds</div>
-                <div class="score-value" id="rounds">0</div>
+                <div class="score-label" id="seriesLabel">Best of 1</div>
+                <div class="score-value" id="rounds">Game 1</div>
             </div>
             <div class="score">
                 <div class="score-label">Player 2</div>
@@ -245,9 +245,58 @@
                 </ul>
             </li>
             <li>Red dividers block future lines - lines cannot cross them</li>
-            <li>When a player wins, all scores reset and dividers are cleared</li>
+            <li>Games can be played as Best of 1, 3, or 5 series</li>
+            <li>Win the majority of games to win the series</li>
         </ul>
         <button id="closeRulesBtn">Got it!</button>
+    </div>
+    
+    <div id="seriesModal" style="
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #333;
+        padding: 30px;
+        border-radius: 10px;
+        text-align: center;
+        display: none;
+        z-index: 1000;
+        box-shadow: 0 0 20px rgba(0,0,0,0.8);
+    ">
+        <h2>Select Game Mode</h2>
+        <div style="margin: 20px 0;">
+            <button class="series-btn" data-value="1" style="
+                background-color: #4CAF50;
+                color: white;
+                border: none;
+                padding: 15px 30px;
+                font-size: 18px;
+                border-radius: 5px;
+                cursor: pointer;
+                margin: 5px;
+            ">Best of 1</button>
+            <button class="series-btn" data-value="3" style="
+                background-color: #2196F3;
+                color: white;
+                border: none;
+                padding: 15px 30px;
+                font-size: 18px;
+                border-radius: 5px;
+                cursor: pointer;
+                margin: 5px;
+            ">Best of 3</button>
+            <button class="series-btn" data-value="5" style="
+                background-color: #ff9800;
+                color: white;
+                border: none;
+                padding: 15px 30px;
+                font-size: 18px;
+                border-radius: 5px;
+                cursor: pointer;
+                margin: 5px;
+            ">Best of 5</button>
+        </div>
     </div>
     
     <script>
@@ -262,17 +311,21 @@
         const score1El = document.getElementById('score1');
         const score2El = document.getElementById('score2');
         const roundsEl = document.getElementById('rounds');
+        const seriesModal = document.getElementById('seriesModal');
+        const seriesLabel = document.getElementById('seriesLabel');
         
         let gameState = {
             currentPlayer: 1,
             phase: 'drawing', // 'drawing', 'evaluating', 'showing_result'
             lines: [],
             horizontalDividers: [],
-            scores: { player1: 0, player2: 0 },
-            rounds: 0,
+            scores: { player1: 0, player2: 0 }, // Games won in series
+            rounds: 0, // Rounds within current game
             drawingLine: null,
             xCoordinate: null,
-            hasWinner: false
+            hasWinner: false,
+            bestOf: 1, // Best of X series
+            seriesStarted: false
         };
         
         function resizeCanvas() {
@@ -394,16 +447,14 @@
             gameState.phase = 'showing_result';
             redraw();
             
-            let hasWinner = false;
+            let hasGameWinner = false;
             
             if (result.winner === 1) {
-                resultText.textContent = "Player 1 Wins!\n" + result.reason;
-                gameState.scores.player1++;
-                hasWinner = true;
+                resultText.textContent = "Player 1 Wins this round!\n" + result.reason;
+                hasGameWinner = true;
             } else if (result.winner === 2) {
-                resultText.textContent = "Player 2 Wins!\n" + result.reason;
-                gameState.scores.player2++;
-                hasWinner = true;
+                resultText.textContent = "Player 2 Wins this round!\n" + result.reason;
+                hasGameWinner = true;
             } else {
                 resultText.textContent = "JUST!\n" + result.reason;
                 if (result.dividerY !== undefined) {
@@ -411,10 +462,31 @@
                 }
             }
             
-            // Update button text based on whether there's a winner
-            if (hasWinner) {
-                continueBtn.textContent = 'New Game';
-                gameState.hasWinner = true;
+            if (hasGameWinner) {
+                // Clear dividers for next game
+                gameState.horizontalDividers = [];
+                
+                // Increment winner's score
+                if (result.winner === 1) {
+                    gameState.scores.player1++;
+                } else if (result.winner === 2) {
+                    gameState.scores.player2++;
+                }
+                
+                // Check if series is won
+                const targetWins = Math.ceil(gameState.bestOf / 2);
+                if (gameState.scores.player1 >= targetWins) {
+                    resultText.textContent = `PLAYER 1 WINS THE SERIES!\n${gameState.scores.player1}-${gameState.scores.player2} in Best of ${gameState.bestOf}`;
+                    continueBtn.textContent = 'New Series';
+                    gameState.hasWinner = true;
+                } else if (gameState.scores.player2 >= targetWins) {
+                    resultText.textContent = `PLAYER 2 WINS THE SERIES!\n${gameState.scores.player2}-${gameState.scores.player1} in Best of ${gameState.bestOf}`;
+                    continueBtn.textContent = 'New Series';
+                    gameState.hasWinner = true;
+                } else {
+                    continueBtn.textContent = 'Next Game';
+                    gameState.hasWinner = false;
+                }
             } else {
                 continueBtn.textContent = 'Continue';
                 gameState.hasWinner = false;
@@ -427,7 +499,9 @@
         function updateScoreboard() {
             score1El.textContent = gameState.scores.player1;
             score2El.textContent = gameState.scores.player2;
-            roundsEl.textContent = gameState.rounds;
+            const currentGame = gameState.scores.player1 + gameState.scores.player2 + 1;
+            roundsEl.textContent = `Game ${currentGame}`;
+            seriesLabel.textContent = `Best of ${gameState.bestOf}`;
         }
         
         function nextRound() {
@@ -437,6 +511,37 @@
             gameState.lines = [];
             updateUI();
             redraw();
+        }
+        
+        function nextGame() {
+            gameState.rounds = 0;
+            gameState.currentPlayer = 1;
+            gameState.phase = 'drawing';
+            gameState.lines = [];
+            gameState.horizontalDividers = [];
+            updateUI();
+            updateScoreboard();
+            redraw();
+        }
+        
+        function startNewSeries(bestOf) {
+            gameState = {
+                currentPlayer: 1,
+                phase: 'drawing',
+                lines: [],
+                horizontalDividers: [],
+                scores: { player1: 0, player2: 0 },
+                rounds: 0,
+                drawingLine: null,
+                xCoordinate: canvas.width / 2,
+                hasWinner: false,
+                bestOf: bestOf,
+                seriesStarted: true
+            };
+            updateUI();
+            updateScoreboard();
+            redraw();
+            seriesModal.style.display = 'none';
         }
         
         function updateUI() {
@@ -525,21 +630,11 @@
             resultModal.style.display = 'none';
             
             if (gameState.hasWinner) {
-                // Start a completely new game, clearing dividers
-                gameState = {
-                    currentPlayer: 1,
-                    phase: 'drawing',
-                    lines: [],
-                    horizontalDividers: [],
-                    scores: { player1: 0, player2: 0 },
-                    rounds: 0,
-                    drawingLine: null,
-                    xCoordinate: canvas.width / 2,
-                    hasWinner: false
-                };
-                updateUI();
-                updateScoreboard();
-                redraw();
+                // Series is over, show series selection
+                seriesModal.style.display = 'block';
+            } else if (continueBtn.textContent === 'Next Game') {
+                // Start next game in series
+                nextGame();
             } else {
                 // Just continue to next round (JUST case)
                 nextRound();
@@ -547,22 +642,17 @@
         });
         
         resetBtn.addEventListener('click', () => {
-            if (confirm('Start a new game? This will reset all scores.')) {
-                gameState = {
-                    currentPlayer: 1,
-                    phase: 'drawing',
-                    lines: [],
-                    horizontalDividers: [],
+            if (confirm('Start a new series? This will reset all scores.')) {
+                seriesModal.style.display = 'block';
+                resultModal.style.display = 'none';
                     scores: { player1: 0, player2: 0 },
                     rounds: 0,
                     drawingLine: null,
                     xCoordinate: canvas.width / 2,
-                    hasWinner: false
+                    hasWinner: false,
+                    bestOf: 1,
+                    seriesStarted: false
                 };
-                resultModal.style.display = 'none';
-                updateUI();
-                updateScoreboard();
-                redraw();
             }
         });
         
@@ -578,9 +668,22 @@
             rulesModal.style.display = 'none';
         });
         
+        // Series selection buttons
+        document.querySelectorAll('.series-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const bestOf = parseInt(e.target.dataset.value);
+                startNewSeries(bestOf);
+            });
+        });
+        
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
         updateScoreboard();
+        
+        // Show series selection on load
+        if (!gameState.seriesStarted) {
+            seriesModal.style.display = 'block';
+        }
         
         // Register service worker for PWA
         if ('serviceWorker' in navigator) {
