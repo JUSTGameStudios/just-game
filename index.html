@@ -658,19 +658,32 @@ All Rights Reserved. See LICENSE file for terms.
         }
         
         function handleStart(e) {
-            if (gameState.phase !== 'drawing') return;
+            console.log('handleStart called', {
+                phase: gameState.phase,
+                seriesStarted: gameState.seriesStarted,
+                resultModal: resultModal.style.display,
+                rulesModal: rulesModal.style.display
+            });
+            
+            if (gameState.phase !== 'drawing') {
+                console.log('Not in drawing phase');
+                return;
+            }
             
             // Don't allow drawing if any modal is open
             if (resultModal.style.display === 'block' || 
                 rulesModal.style.display === 'block') {
+                console.log('Modal is open');
                 return;
             }
             
             // Allow drawing if series has started (modal should be closed)
             if (!gameState.seriesStarted) {
+                console.log('Series not started');
                 return;
             }
             
+            console.log('Starting to draw line');
             e.preventDefault();
             const rect = canvas.getBoundingClientRect();
             const y = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
