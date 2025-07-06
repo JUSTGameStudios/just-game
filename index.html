@@ -285,6 +285,7 @@ All Rights Reserved. See LICENSE file for terms.
             <div id="gameTitle">JUST</div>
             <div id="playerInfo">Player 1's Turn</div>
             <div id="instructions">Draw a vertical line</div>
+            <div id="debugInfo" style="font-size: 10px; color: #ff0; background: #000; padding: 2px; margin: 2px 0;">Debug: Ready</div>
         </div>
         
         <div id="canvasContainer">
@@ -655,35 +656,47 @@ All Rights Reserved. See LICENSE file for terms.
                     instructions.textContent = 'Draw a vertical line';
                 }
             }
+            
+            // Update debug info
+            debugLog(`UI Update: phase=${gameState.phase}, started=${gameState.seriesStarted}`);
+        }
+        
+        function debugLog(message) {
+            const debugEl = document.getElementById('debugInfo');
+            if (debugEl) {
+                debugEl.textContent = 'Debug: ' + message;
+            }
         }
         
         function handleStart(e) {
-            console.log('handleStart called', {
+            const debugInfo = {
                 phase: gameState.phase,
                 seriesStarted: gameState.seriesStarted,
                 resultModal: resultModal.style.display,
                 rulesModal: rulesModal.style.display
-            });
+            };
+            
+            debugLog(`handleStart: phase=${debugInfo.phase}, started=${debugInfo.seriesStarted}`);
             
             if (gameState.phase !== 'drawing') {
-                console.log('Not in drawing phase');
+                debugLog('BLOCKED: Not in drawing phase');
                 return;
             }
             
             // Don't allow drawing if any modal is open
             if (resultModal.style.display === 'block' || 
                 rulesModal.style.display === 'block') {
-                console.log('Modal is open');
+                debugLog('BLOCKED: Modal is open');
                 return;
             }
             
             // Allow drawing if series has started (modal should be closed)
             if (!gameState.seriesStarted) {
-                console.log('Series not started');
+                debugLog('BLOCKED: Series not started');
                 return;
             }
             
-            console.log('Starting to draw line');
+            debugLog('SUCCESS: Starting to draw line');
             e.preventDefault();
             const rect = canvas.getBoundingClientRect();
             const y = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
