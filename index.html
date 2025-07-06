@@ -576,7 +576,7 @@ All Rights Reserved. See LICENSE file for terms.
                 return { winner: 2, reason: "Player 2's line fits entirely within Player 1's line" };
             } else if (line1InLine2 && line2InLine1) {
                 // Both lines are identical
-                return { winner: 0, reason: "JUST! Lines are identical" };
+                return { winner: 0, reason: "Lines are identical" };
             }
             
             // Check if lines overlap at all
@@ -592,7 +592,7 @@ All Rights Reserved. See LICENSE file for terms.
                 } else if (line2Length > line1Length) {
                     return { winner: 2, reason: "No overlap - Player 2's line is longer" };
                 } else {
-                    return { winner: 0, reason: "JUST! Lines are equal length with no overlap" };
+                    return { winner: 0, reason: "Lines are equal length with no overlap" };
                 }
             }
             
@@ -601,7 +601,7 @@ All Rights Reserved. See LICENSE file for terms.
             const overlapBottom = Math.min(line1Bottom, line2Bottom);
             const midpoint = (overlapTop + overlapBottom) / 2;
             
-            return { winner: 0, reason: "JUST! Lines overlap partially", dividerY: midpoint };
+            return { winner: 0, reason: "Lines overlap partially", dividerY: midpoint };
         }
         
         function showResult(result) {
@@ -637,11 +637,11 @@ All Rights Reserved. See LICENSE file for terms.
                 // Check if series is won
                 const targetWins = Math.ceil(gameState.bestOf / 2);
                 if (gameState.scores.player1 >= targetWins) {
-                    resultText.textContent = `PLAYER 1 WINS THE SERIES!\n${gameState.scores.player1}-${gameState.scores.player2} in Best of ${gameState.bestOf}`;
+                    resultText.textContent = `PLAYER 1 WINS THE SERIES!\n\nFinal Game: ${result.reason}\n\nSeries Score: ${gameState.scores.player1}-${gameState.scores.player2} in Best of ${gameState.bestOf}`;
                     continueBtn.textContent = 'New Series';
                     gameState.hasWinner = true;
                 } else if (gameState.scores.player2 >= targetWins) {
-                    resultText.textContent = `PLAYER 2 WINS THE SERIES!\n${gameState.scores.player2}-${gameState.scores.player1} in Best of ${gameState.bestOf}`;
+                    resultText.textContent = `PLAYER 2 WINS THE SERIES!\n\nFinal Game: ${result.reason}\n\nSeries Score: ${gameState.scores.player2}-${gameState.scores.player1} in Best of ${gameState.bestOf}`;
                     continueBtn.textContent = 'New Series';
                     gameState.hasWinner = true;
                 } else {
