@@ -58,6 +58,7 @@ All Rights Reserved. See LICENSE file for terms.
             height: -webkit-fill-available;
             width: 100vw;
             overflow: hidden;
+            min-height: 100vh;
         }
         
         #header {
@@ -94,6 +95,8 @@ All Rights Reserved. See LICENSE file for terms.
             position: relative;
             background-color: #0a0a0a;
             overflow: hidden;
+            min-height: 200px;
+            height: 100%;
         }
         
         #gameCanvas {
@@ -287,7 +290,7 @@ All Rights Reserved. See LICENSE file for terms.
         <div id="header">
             <button id="rulesBtn">Rules</button>
             <button id="resetBtn">New Game</button>
-            <div id="gameTitle" style="background: red; color: yellow;">JUST v22 DEBUG</div>
+            <div id="gameTitle" style="background: red; color: yellow;">JUST v24 DEBUG</div>
             <div id="playerInfo">Player 1's Turn</div>
             <div id="instructions">Draw a vertical line</div>
             <div id="debugInfo" style="font-size: 10px; color: #ff0; background: #000; padding: 2px; margin: 2px 0;">Debug: Ready</div>
@@ -435,8 +438,15 @@ All Rights Reserved. See LICENSE file for terms.
         
         function resizeCanvas() {
             const container = document.getElementById('canvasContainer');
-            canvas.width = container.clientWidth;
-            canvas.height = container.clientHeight;
+            canvas.width = container.clientWidth || 400;
+            canvas.height = container.clientHeight || 300;
+            
+            // Force minimum dimensions
+            if (canvas.height < 200) canvas.height = 200;
+            if (canvas.width < 200) canvas.width = 200;
+            
+            debugLog(`ResizeCanvas: container=${container.clientWidth}x${container.clientHeight}, canvas=${canvas.width}x${canvas.height}`);
+            
             if (gameState.xCoordinate === null) {
                 gameState.xCoordinate = canvas.width / 2;
             }
