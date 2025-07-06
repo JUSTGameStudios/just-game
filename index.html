@@ -23,8 +23,8 @@ All Rights Reserved. See LICENSE file for terms.
     <link rel="manifest" href="./manifest.json">
     
     <!-- PWA Icons -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiBmaWxsPSIjMUExQTFBIi8+CjxsaW5lIHgxPSIxNiIgeTE9IjgiIHgyPSIxNiIgeTI9IjI0IiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iMiIvPgo8bGluZSB4MT0iMTYiIHkxPSIxMiIgeDI9IjE2IiB5Mj0iMjAiIHN0cm9rZT0iIzRDM0Q4RiIgc3Ryb2tlLXdpZHRoPSIyIi8+Cjwvc3ZnPg==">
-    <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgwIiBoZWlnaHQ9IjE4MCIgdmlld0JveD0iMCAwIDE4MCAxODAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxODAiIGhlaWdodD0iMTgwIiBmaWxsPSIjMUExQTFBIi8+CjxsaW5lIHgxPSI5MCIgeTE9IjQ1IiB4Mj0iOTAiIHkyPSIxMzUiIHN0cm9rZT0iI0ZGRkZGRiIgc3Ryb2tlLXdpZHRoPSI4Ii8+CjxsaW5lIHgxPSI5MCIgeTE9IjY3LjUiIHgyPSI5MCIgeTI9IjExMi41IiBzdHJva2U9IiM0QzNEOEYiIHN0cm9rZS13aWR0aD0iOCIvPgo8L3N2Zz4K">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiBmaWxsPSIjMUExQTFBIi8+CjxsaW5lIHgxPSIxNiIgeTE9IjgiIHgyPSIxNiIgeTI9IjI0IiBzdHJva2U9IiM5QjhFQzciIHN0cm9rZS13aWR0aD0iMiIvPgo8bGluZSB4MT0iMTYiIHkxPSIxMiIgeDI9IjE2IiB5Mj0iMjAiIHN0cm9rZT0iIzRDM0Q4RiIgc3Ryb2tlLXdpZHRoPSIyIi8+Cjwvc3ZnPg==">
+    <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgwIiBoZWlnaHQ9IjE4MCIgdmlld0JveD0iMCAwIDE4MCAxODAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxODAiIGhlaWdodD0iMTgwIiBmaWxsPSIjMUExQTFBIi8+CjxsaW5lIHgxPSI5MCIgeTE9IjQ1IiB4Mj0iOTAiIHkyPSIxMzUiIHN0cm9rZT0iIzlCOEVDNyIgc3Ryb2tlLXdpZHRoPSI4Ii8+CjxsaW5lIHgxPSI5MCIgeTE9IjY3LjUiIHgyPSI5MCIgeTI9IjExMi41IiBzdHJva2U9IiM0QzNEOEYiIHN0cm9rZS13aWR0aD0iOCIvPgo8L3N2Zz4K">
     <style>
         body {
             margin: 0;
@@ -543,12 +543,12 @@ All Rights Reserved. See LICENSE file for terms.
                     const overlapBottom = Math.min(line1Bottom, line2Bottom);
                     
                     // Draw lines
-                    drawLine(gameState.lines[0], '#FFFFFF');
+                    drawLine(gameState.lines[0], '#9B8EC7');
                     drawLine(gameState.lines[1], '#4C3D8F');
                     
                     // Draw overlap area if it exists
                     if (overlapTop < overlapBottom) {
-                        ctx.strokeStyle = '#9B8EC7';
+                        ctx.strokeStyle = '#FFFFFF';
                         ctx.lineWidth = 6;
                         ctx.beginPath();
                         ctx.moveTo(gameState.xCoordinate, overlapTop);
@@ -560,7 +560,7 @@ All Rights Reserved. See LICENSE file for terms.
             
             // Draw current drawing line
             if (gameState.drawingLine) {
-                drawLine(gameState.drawingLine, gameState.currentPlayer === 1 ? '#FFFFFF' : '#4C3D8F');
+                drawLine(gameState.drawingLine, gameState.currentPlayer === 1 ? '#9B8EC7' : '#4C3D8F');
             }
         }
         
