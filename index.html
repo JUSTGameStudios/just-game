@@ -227,7 +227,7 @@
     
     <div id="resultModal">
         <div id="resultText"></div>
-        <button id="continueBtn">Continue (auto in 3s)</button>
+        <button id="continueBtn">Continue</button>
     </div>
     
     <div id="rulesModal">
@@ -245,7 +245,7 @@
                 </ul>
             </li>
             <li>Red dividers block future lines - lines cannot cross them</li>
-            <li>After a winner is determined, a new game starts automatically</li>
+            <li>When a player wins, all scores reset and dividers are cleared</li>
         </ul>
         <button id="closeRulesBtn">Got it!</button>
     </div>
@@ -271,7 +271,8 @@
             scores: { player1: 0, player2: 0 },
             rounds: 0,
             drawingLine: null,
-            xCoordinate: null
+            xCoordinate: null,
+            hasWinner: false
         };
         
         function resizeCanvas() {
@@ -393,17 +394,16 @@
             gameState.phase = 'showing_result';
             redraw();
             
-            // Clear dividers when there's a winner
-            if (result.winner !== 0) {
-                gameState.horizontalDividers = [];
-            }
+            let hasWinner = false;
             
             if (result.winner === 1) {
                 resultText.textContent = "Player 1 Wins!\n" + result.reason;
                 gameState.scores.player1++;
+                hasWinner = true;
             } else if (result.winner === 2) {
                 resultText.textContent = "Player 2 Wins!\n" + result.reason;
                 gameState.scores.player2++;
+                hasWinner = true;
             } else {
                 resultText.textContent = "JUST!\n" + result.reason;
                 if (result.dividerY !== undefined) {
@@ -411,16 +411,17 @@
                 }
             }
             
+            // Update button text based on whether there's a winner
+            if (hasWinner) {
+                continueBtn.textContent = 'New Game';
+                gameState.hasWinner = true;
+            } else {
+                continueBtn.textContent = 'Continue';
+                gameState.hasWinner = false;
+            }
+            
             updateScoreboard();
             resultModal.style.display = 'block';
-            
-            // Auto-continue after 3 seconds
-            setTimeout(() => {
-                if (resultModal.style.display === 'block') {
-                    resultModal.style.display = 'none';
-                    nextRound();
-                }
-            }, 3000);
         }
         
         function updateScoreboard() {
@@ -522,7 +523,27 @@
         
         continueBtn.addEventListener('click', () => {
             resultModal.style.display = 'none';
-            nextRound();
+            
+            if (gameState.hasWinner) {
+                // Start a completely new game, clearing dividers
+                gameState = {
+                    currentPlayer: 1,
+                    phase: 'drawing',
+                    lines: [],
+                    horizontalDividers: [],
+                    scores: { player1: 0, player2: 0 },
+                    rounds: 0,
+                    drawingLine: null,
+                    xCoordinate: canvas.width / 2,
+                    hasWinner: false
+                };
+                updateUI();
+                updateScoreboard();
+                redraw();
+            } else {
+                // Just continue to next round (JUST case)
+                nextRound();
+            }
         });
         
         resetBtn.addEventListener('click', () => {
@@ -535,7 +556,8 @@
                     scores: { player1: 0, player2: 0 },
                     rounds: 0,
                     drawingLine: null,
-                    xCoordinate: canvas.width / 2
+                    xCoordinate: canvas.width / 2,
+                    hasWinner: false
                 };
                 resultModal.style.display = 'none';
                 updateUI();
