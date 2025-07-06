@@ -169,11 +169,13 @@ All Rights Reserved. See LICENSE file for terms.
             position: absolute;
             top: 2px;
             right: 2px;
+            bottom: 2px;
+            width: 80px;
             background-color: #f44336;
             color: white;
             border: 1px solid #000;
-            padding: 4px 8px;
-            font-size: 10px;
+            padding: 0;
+            font-size: 12px;
             font-family: monospace;
             font-weight: bold;
             text-transform: uppercase;
@@ -191,11 +193,13 @@ All Rights Reserved. See LICENSE file for terms.
             position: absolute;
             top: 2px;
             left: 2px;
+            bottom: 2px;
+            width: 80px;
             background-color: #2196F3;
             color: white;
             border: 1px solid #000;
-            padding: 4px 8px;
-            font-size: 10px;
+            padding: 0;
+            font-size: 12px;
             font-family: monospace;
             font-weight: bold;
             text-transform: uppercase;
@@ -345,7 +349,6 @@ All Rights Reserved. See LICENSE file for terms.
         text-align: center;
         display: none;
         z-index: 1000;
-        box-shadow: 8px 8px 0px #000;
     ">
         <h2>Select Game Mode</h2>
         <div style="margin: 20px 0;">
@@ -659,8 +662,12 @@ All Rights Reserved. See LICENSE file for terms.
             
             // Don't allow drawing if any modal is open
             if (resultModal.style.display === 'block' || 
-                rulesModal.style.display === 'block' || 
-                seriesModal.style.display === 'block') {
+                rulesModal.style.display === 'block') {
+                return;
+            }
+            
+            // Allow drawing if series has started (modal should be closed)
+            if (!gameState.seriesStarted) {
                 return;
             }
             
