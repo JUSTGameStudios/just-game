@@ -102,6 +102,9 @@ All Rights Reserved. See LICENSE file for terms.
             left: 0;
             width: 100%;
             height: 100%;
+            pointer-events: auto;
+            z-index: 1;
+            cursor: crosshair;
         }
         
         #scoreBoard {
@@ -761,13 +764,28 @@ All Rights Reserved. See LICENSE file for terms.
             }
         }
         
+        // Test function to see if canvas receives events
+        function testCanvasEvent(e) {
+            debugLog('Canvas event detected: ' + e.type);
+        }
+        
         // Event listeners
-        canvas.addEventListener('mousedown', handleStart);
+        canvas.addEventListener('mousedown', function(e) {
+            debugLog('Canvas mousedown');
+            handleStart(e);
+        });
         canvas.addEventListener('mousemove', handleMove);
         canvas.addEventListener('mouseup', handleEnd);
-        canvas.addEventListener('touchstart', handleStart);
+        canvas.addEventListener('touchstart', function(e) {
+            debugLog('Canvas touchstart');
+            handleStart(e);
+        });
         canvas.addEventListener('touchmove', handleMove);
         canvas.addEventListener('touchend', handleEnd);
+        
+        // Add test listener to see if canvas receives any events
+        canvas.addEventListener('click', testCanvasEvent);
+        canvas.addEventListener('pointerdown', testCanvasEvent);
         
         continueBtn.addEventListener('click', () => {
             resultModal.style.display = 'none';
