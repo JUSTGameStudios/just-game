@@ -44,18 +44,21 @@ All Rights Reserved. See LICENSE file for terms.
             flex-direction: column;
             height: 100vh;
             width: 100vw;
+            overflow: hidden;
         }
         
         #header {
             background-color: #2a2a2a;
-            padding: 10px;
+            padding: 20px 10px;
             text-align: center;
             border-bottom: 2px solid #444;
+            position: relative;
+            min-height: 80px;
         }
         
         #playerInfo {
             font-size: 24px;
-            margin-bottom: 10px;
+            margin: 25px 150px 10px 150px;
         }
         
         #instructions {
@@ -79,10 +82,11 @@ All Rights Reserved. See LICENSE file for terms.
         
         #scoreBoard {
             background-color: #2a2a2a;
-            padding: 10px;
+            padding: 15px 10px;
             display: flex;
             justify-content: space-around;
             border-top: 2px solid #444;
+            flex-shrink: 0;
         }
         
         .score {
@@ -273,7 +277,7 @@ All Rights Reserved. See LICENSE file for terms.
             </div>
         </div>
         
-        <div style="background-color: #1a1a1a; padding: 5px; text-align: center; font-size: 11px; color: #666;">
+        <div style="background-color: #1a1a1a; padding: 10px 5px; text-align: center; font-size: 11px; color: #666; flex-shrink: 0;">
             © 2020-2025 Taylor Hanlon & Cesar Guzman | All Rights Reserved | <a href="https://github.com/JUSTGameStudios/just-game/blob/main/LICENSE" style="color: #888; text-decoration: none;">License</a>
         </div>
     </div>
