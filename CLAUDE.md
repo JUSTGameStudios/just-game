@@ -1,92 +1,267 @@
 # Just - The Line Game
 
-A simple two-player browser-based game where players draw vertical lines and compete based on line positioning.
+A sophisticated Progressive Web App (PWA) implementation of a two-player line-drawing game with retro pixel art aesthetic and series gameplay.
+
+**Copyright © 2020-2025 Taylor Hanlon & Cesar Guzman. All Rights Reserved.**
+
+## Project Overview
+
+Just is a strategic two-player game where players draw vertical lines at the same x-coordinate and compete based on line positioning. The game features best-of series gameplay, PWA capabilities, and mobile-optimized touch controls.
 
 ## Project Structure
 
 ```
 just/
-├── README.md          # Game documentation and instructions
-├── index.html         # Complete game client (HTML + CSS + JavaScript)
-├── server.js          # Simple HTTP server for serving the game
-├── start.sh           # Bash script to start the server
-└── CLAUDE.md          # This file - project context for Claude Code
+├── index.html         # Complete game client (810 lines - HTML + CSS + JavaScript)
+├── server.js          # HTTP development server (27 lines)
+├── https-server.js    # HTTPS server for PWA testing (45 lines)
+├── sw.js              # Service worker for PWA caching (78 lines)
+├── manifest.json      # PWA manifest with icons and metadata
+├── start.sh           # Bash script to start HTTP server
+├── LICENSE            # Custom restrictive license
+├── README.md          # Project documentation
+└── CLAUDE.md          # This file - comprehensive project context
 ```
 
 ## Technology Stack
 
-- **Backend**: Node.js HTTP server (no dependencies)
-- **Frontend**: Vanilla HTML5 Canvas + JavaScript
-- **Styling**: CSS with responsive design
-- **Platform**: Cross-platform (works in Termux on Android)
+- **Frontend**: Pure HTML5 Canvas + Vanilla JavaScript (no dependencies)
+- **Backend**: Node.js HTTP server (no external packages)
+- **PWA**: Service Worker with cache-first strategy
+- **Styling**: CSS with retro pixel art aesthetic
+- **Platform**: Cross-platform (Termux on Android, all modern browsers)
+- **Deployment**: GitHub Pages with HTTPS
+
+## Game Mechanics
+
+### Core Rules (`index.html:494-539`)
+1. **Line Drawing**: Both players draw vertical lines at the same x-coordinate (center)
+2. **Secrecy**: Player 1 draws first (hidden), then Player 2 draws
+3. **Victory Conditions**:
+   - If one line fits entirely within the other → **smaller line wins**
+   - If lines don't overlap → **longer line wins**
+   - If lines partially overlap → **"JUST" (draw)** with red divider
+
+### Series Gameplay (`index.html:445-493`)
+- **Best of 1, 3, or 5**: Players choose series length at start
+- **Score Tracking**: Games won (not individual rounds)
+- **Divider Behavior**: Clear between games, persist during JUST rounds
+- **Series Winner**: First to win majority of games
+
+### Red Dividers (`index.html:290-299, 455-465`)
+- **Appear on JUST**: Horizontal lines mark overlap areas
+- **Block Future Lines**: Lines cannot cross existing dividers
+- **Cumulative**: Multiple dividers can exist simultaneously
+- **Reset on Win**: Clear when a player wins a game
 
 ## Key Components
 
-### Server (`server.js:1-27`)
-- Simple HTTP server on port 8080
-- Serves static `index.html` file
-- No external dependencies
-
-### Game Client (`index.html:1-438`)
-- Complete self-contained game implementation
-- HTML5 Canvas for drawing
-- Touch and mouse input support
-- Real-time game state management
-- Score tracking and round system
-
-## Running the Game
-
-### Start Server
-```bash
-# Option 1: Direct node command
-node server.js
-
-# Option 2: Using the start script
-chmod +x start.sh
-./start.sh
+### Game State Management (`index.html:412-424`)
+```javascript
+gameState = {
+    currentPlayer: 1,           // 1 or 2
+    phase: 'drawing',          // 'drawing', 'evaluating', 'showing_result'
+    lines: [],                 // Current round's lines
+    horizontalDividers: [],    // Red blocking lines
+    scores: { player1: 0, player2: 0 }, // Games won in series
+    rounds: 0,                 // Rounds within current game
+    bestOf: 1,                 // Series length (1, 3, or 5)
+    seriesStarted: false,      // Whether series has begun
+    hasWinner: false           // Whether current series has winner
+}
 ```
 
-### Access Game
-Open http://localhost:8080 in any modern web browser
+### Canvas System (`index.html:426-481`)
+- **Responsive Sizing**: Auto-adjusts to container (`resizeCanvas()`)
+- **Drawing Functions**: Line rendering with colors (Player 1: green, Player 2: blue)
+- **Coordinate System**: Uses canvas pixel coordinates
+- **Redraw Logic**: Complete canvas refresh on state changes
 
-## Game Rules
+### Input Handling (`index.html:657-729`)
+- **Touch & Mouse**: Unified event handling
+- **Drawing Prevention**: Blocks input when modals open
+- **Line Validation**: Minimum 10px length requirement
+- **Divider Collision**: Stops drawing at red dividers
 
-1. Player 1 draws a vertical line (any length)
-2. Line is hidden while Player 2 draws their line
-3. Winner determined by:
-   - If one line fits entirely within the other → smaller line wins
-   - If lines don't overlap → longer line wins  
-   - If lines partially overlap → "JUST" (draw) with red divider
+### UI Components
+
+#### Header (`index.html:49-64, 78-86`)
+- **Game Title**: "JUST" always visible
+- **Player Info**: Current player turn (hidden during modal)
+- **Instructions**: Context-sensitive help text
+- **Compact Design**: 40px height for mobile optimization
+
+#### Buttons (`index.html:132-175`)
+- **Retro Style**: Pixel art aesthetic with black borders
+- **Rules Button**: Opens game instructions modal
+- **New Game Button**: Resets scores and starts series selection
+- **Responsive**: Smaller on mobile devices
+
+#### Scoreboard (`index.html:94-105`)
+- **Series Progress**: Shows "Best of X" and current game number
+- **Score Display**: Games won by each player
+- **Compact Layout**: Optimized for mobile screens
+
+### Modal System
+
+#### Series Selection (`index.html:254-290`)
+- **Game Mode Choice**: Best of 1, 3, or 5
+- **Retro Buttons**: Consistent pixel art styling
+- **Auto-show**: Appears on game start and series completion
+
+#### Rules Modal (`index.html:233-253`)
+- **Game Instructions**: Complete rule explanation
+- **Attribution**: Credits game creators
+- **Mobile Responsive**: Scales for different screen sizes
+
+#### Result Modal (`index.html:228-232`)
+- **Win Announcement**: Player victory or JUST notification
+- **Dynamic Buttons**: "Continue", "Next Game", or "New Series"
+- **Auto-sizing**: Adapts to message length
+
+### Progressive Web App Features
+
+#### Service Worker (`sw.js:1-78`)
+- **Cache Strategy**: Cache-first with network fallback
+- **Versioned Caching**: `just-game-v15` for cache busting
+- **Offline Support**: Full game playable offline
+- **Asset Caching**: HTML, manifest, and all resources
+
+#### Manifest (`manifest.json:1-42`)
+- **App Metadata**: Name, description, theme colors
+- **Icon Suite**: 192px and 512px SVG icons with maskable support
+- **Display Mode**: Standalone for app-like experience
+- **Scope**: GitHub Pages compatible (`/just-game/`)
+
+#### Installation
+- **Add to Home Screen**: Available on mobile browsers
+- **Offline Capability**: Works without internet after install
+- **App Shell**: Cached for instant loading
+
+## Mobile Optimization
+
+### Viewport Handling (`index.html:28-42`)
+- **Browser Bar Fix**: `-webkit-fill-available` for iOS Safari
+- **Touch Optimization**: `touch-action: none` prevents scrolling
+- **Responsive Canvas**: Maximum play area while preserving UI
+
+### Layout System (`index.html:45-48`)
+- **Flexbox**: Vertical layout with proper scaling
+- **Compact Headers**: Minimal space usage (40px header)
+- **Fixed Elements**: Prevent content overflow on small screens
+
+## Development & Deployment
+
+### Local Development
+```bash
+# HTTP Server (development)
+node server.js                    # Runs on http://localhost:8080
+
+# HTTPS Server (PWA testing)
+node https-server.js              # Runs on https://localhost:8443
+
+# Quick Start
+./start.sh                        # Alias for HTTP server
+```
+
+### Production Deployment
+- **GitHub Pages**: https://JUSTGameStudios.github.io/just-game/
+- **HTTPS Required**: For PWA functionality on mobile
+- **Cache Versioning**: Update `sw.js` cache name for deployments
+
+### Testing
+- **No Build Process**: Direct file deployment
+- **Browser DevTools**: Use F12 for debugging
+- **Mobile Testing**: Use device emulation or real devices
+- **PWA Testing**: Chrome DevTools > Application > Service Workers
+
+## Important Code Locations
+
+### Core Game Logic
+- **Line Evaluation**: `index.html:494-539` - Victory condition algorithm
+- **Game State Updates**: `index.html:445-493` - Result processing and series logic
+- **Draw Functions**: `index.html:347-385` - Canvas rendering system
+
+### Input & Interaction
+- **Touch Handling**: `index.html:657-729` - Mouse and touch event processing
+- **Modal Logic**: `index.html:730-780` - UI state management
+- **Button Events**: `index.html:730-770` - User interaction handling
+
+### UI Updates
+- **Dynamic Text**: `index.html:642-656` - Player turn and instruction updates
+- **Scoreboard**: `index.html:579-587` - Series progress display
+- **Responsive Layout**: `index.html:426-443` - Canvas resizing
+
+### PWA Implementation
+- **Service Worker Registration**: `index.html:795-809`
+- **Cache Management**: `sw.js:8-34` - Install and activate events
+- **Network Strategy**: `sw.js:37-78` - Fetch event handling
+
+## Styling & Aesthetic
+
+### Retro Pixel Art Theme
+- **Monospace Font**: Terminal/console appearance
+- **Black Borders**: Sharp, blocky button design
+- **Drop Shadows**: 8px for modals, 4px for buttons
+- **Color Palette**: Dark theme with green/blue player colors
+
+### Mobile-First Design
+- **Touch Targets**: Large enough for finger interaction
+- **Compact Layout**: Maximizes play area
+- **Readable Text**: Sufficient contrast and sizing
+
+## License & Usage
+
+### Restrictions (LICENSE:1-46)
+- **Personal Use**: ✅ Free for non-commercial use
+- **Educational Use**: ✅ Study and learning permitted
+- **Commercial Use**: ❌ Prohibited without written permission
+- **Distribution**: ❌ App stores/platforms require permission
+- **Attribution**: Required - "Game concept by Taylor Hanlon & Cesar Guzman"
+
+### Contact
+- **Commercial Licensing**: JustGameStudios@outlook.com
+- **Repository**: https://github.com/JUSTGameStudios/just-game
 
 ## Development Notes
 
-- No build process required
-- No package.json or dependencies
-- Pure JavaScript implementation
-- Mobile-optimized touch controls
-- Responsive canvas resizing
-- Game state persisted in memory only
+### Code Quality
+- **Defensive Programming**: Handles edge cases and invalid input
+- **No Dependencies**: Pure vanilla implementation for reliability
+- **Cross-Platform**: Works in Termux on Android and all modern browsers
+- **Self-Contained**: All assets embedded in HTML (no external files)
 
-## File Details
+### Performance
+- **Efficient Rendering**: Only redraws when necessary
+- **Touch Optimized**: Minimal input lag
+- **Small Bundle**: ~50KB total (including PWA assets)
+- **Fast Loading**: Service worker enables instant subsequent loads
 
-- `server.js:24`: Server starts on port 8080
-- `index.html:158-436`: Complete game logic in JavaScript
-- `index.html:170-179`: Main game state object
-- `index.html:249-293`: Core game evaluation algorithm
-- `start.sh:5`: Launches server with node command
+### Maintenance
+- **Version Control**: Git with GitHub hosting
+- **Cache Busting**: Manual service worker version updates
+- **Mobile Testing**: Regular testing on various devices
+- **PWA Compliance**: Follows web app manifest standards
 
 ## Common Tasks
 
-- **Start development server**: `node server.js`
-- **Test on mobile**: Open http://localhost:8080 on mobile browser
-- **Reset game**: Click "New Game" button in UI
-- **Debug**: Use browser developer tools (F12)
+### Adding Features
+1. Update game logic in `index.html`
+2. Increment service worker cache version in `sw.js`
+3. Test locally with both HTTP and HTTPS servers
+4. Deploy to GitHub Pages
+5. Test PWA functionality on mobile devices
 
-## Notes for Claude Code
+### Debugging
+- **Game Logic**: Use browser console and breakpoints
+- **Canvas Issues**: Check canvas sizing and coordinate systems
+- **PWA Problems**: Inspect service worker in DevTools
+- **Mobile Issues**: Use device emulation or real device testing
 
-- This is a complete, working game with no external dependencies
-- No build/test/lint commands - pure vanilla JavaScript
-- Server is minimal - just serves static files
-- All game logic is client-side in the HTML file
-- Code is defensive and handles edge cases
-- Mobile-first responsive design
+### Performance Optimization
+- **Canvas**: Minimize redraws and use efficient rendering
+- **Touch**: Ensure responsive input handling
+- **Caching**: Update service worker for optimal caching strategy
+- **Mobile**: Test on various devices and screen sizes
+
+This codebase represents a complete, production-ready game with modern web standards, mobile optimization, and PWA capabilities while maintaining a simple, dependency-free architecture.
