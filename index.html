@@ -13,7 +13,7 @@ All Rights Reserved. See LICENSE file for terms.
     
     <!-- PWA Meta Tags -->
     <meta name="description" content="A simple two-player line drawing game">
-    <meta name="theme-color" content="#2a2a2a">
+    <meta name="theme-color" content="#1A1A1A">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Just">
@@ -23,8 +23,8 @@ All Rights Reserved. See LICENSE file for terms.
     <link rel="manifest" href="./manifest.json">
     
     <!-- PWA Icons -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiBmaWxsPSIjMWExYTFhIi8+CjxsaW5lIHgxPSIxNiIgeTE9IjgiIHgyPSIxNiIgeTI9IjI0IiBzdHJva2U9IiMwMGZmMDAiIHN0cm9rZS13aWR0aD0iMiIvPgo8bGluZSB4MT0iMTYiIHkxPSIxMiIgeDI9IjE2IiB5Mj0iMjAiIHN0cm9rZT0iIzAwOTlmZiIgc3Ryb2tlLXdpZHRoPSIyIi8+Cjwvc3ZnPg==">
-    <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgwIiBoZWlnaHQ9IjE4MCIgdmlld0JveD0iMCAwIDE4MCAxODAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxODAiIGhlaWdodD0iMTgwIiBmaWxsPSIjMWExYTFhIi8+CjxsaW5lIHgxPSI5MCIgeTE9IjQ1IiB4Mj0iOTAiIHkyPSIxMzUiIHN0cm9rZT0iIzAwZmYwMCIgc3Ryb2tlLXdpZHRoPSI4Ii8+CjxsaW5lIHgxPSI5MCIgeTE9IjY3LjUiIHgyPSI5MCIgeTI9IjExMi41IiBzdHJva2U9IiMwMDk5ZmYiIHN0cm9rZS13aWR0aD0iOCIvPgo8L3N2Zz4K">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiBmaWxsPSIjMUExQTFBIi8+CjxsaW5lIHgxPSIxNiIgeTE9IjgiIHgyPSIxNiIgeTI9IjI0IiBzdHJva2U9IiM2QjQ2QjgiIHN0cm9rZS13aWR0aD0iMiIvPgo8bGluZSB4MT0iMTYiIHkxPSIxMiIgeDI9IjE2IiB5Mj0iMjAiIHN0cm9rZT0iIzRDM0Q4RiIgc3Ryb2tlLXdpZHRoPSIyIi8+Cjwvc3ZnPg==">
+    <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgwIiBoZWlnaHQ9IjE4MCIgdmlld0JveD0iMCAwIDE4MCAxODAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxODAiIGhlaWdodD0iMTgwIiBmaWxsPSIjMUExQTFBIi8+CjxsaW5lIHgxPSI5MCIgeTE9IjQ1IiB4Mj0iOTAiIHkyPSIxMzUiIHN0cm9rZT0iIzZCNDZCOCIgc3Ryb2tlLXdpZHRoPSI4Ii8+CjxsaW5lIHgxPSI5MCIgeTE9IjY3LjUiIHgyPSI5MCIgeTI9IjExMi41IiBzdHJva2U9IiM0QzNEOEYiIHN0cm9rZS13aWR0aD0iOCIvPgo8L3N2Zz4K">
     <style>
         body {
             margin: 0;
@@ -62,10 +62,10 @@ All Rights Reserved. See LICENSE file for terms.
         }
         
         #header {
-            background-color: #2a2a2a;
+            background-color: #1A1A1A;
             padding: 4px;
             text-align: center;
-            border-bottom: 1px solid #444;
+            border-bottom: 1px solid #000;
             position: relative;
             min-height: 40px;
             flex-shrink: 0;
@@ -81,19 +81,19 @@ All Rights Reserved. See LICENSE file for terms.
         #playerInfo {
             font-size: 14px;
             margin: 0 100px 2px 100px;
-            color: #ccc;
+            color: #9B8EC7;
         }
         
         #instructions {
             font-size: 12px;
-            color: #aaa;
+            color: #9B8EC7;
             margin: 0;
         }
         
         #canvasContainer {
             flex: 1;
             position: relative;
-            background-color: #0a0a0a;
+            background-color: #000000;
             overflow: hidden;
             min-height: 200px;
             height: 100%;
@@ -111,11 +111,11 @@ All Rights Reserved. See LICENSE file for terms.
         }
         
         #scoreBoard {
-            background-color: #2a2a2a;
+            background-color: #1A1A1A;
             padding: 4px 5px;
             display: flex;
             justify-content: space-around;
-            border-top: 1px solid #444;
+            border-top: 1px solid #000;
             flex-shrink: 0;
         }
         
@@ -125,7 +125,7 @@ All Rights Reserved. See LICENSE file for terms.
         
         .score-label {
             font-size: 10px;
-            color: #888;
+            color: #9B8EC7;
         }
         
         .score-value {
@@ -138,7 +138,7 @@ All Rights Reserved. See LICENSE file for terms.
             top: 50%;
             right: 20px;
             transform: translateY(-50%);
-            background-color: #333;
+            background-color: #1A1A1A;
             border: 4px solid #000;
             padding: 20px;
             text-align: center;
@@ -189,7 +189,7 @@ All Rights Reserved. See LICENSE file for terms.
         }
         
         #continueBtn {
-            background-color: #4CAF50;
+            background-color: #6B46B8;
             color: white;
             border: 3px solid #000;
             padding: 12px 16px;
@@ -229,7 +229,7 @@ All Rights Reserved. See LICENSE file for terms.
             right: 2px;
             bottom: 2px;
             width: 80px;
-            background-color: #f44336;
+            background-color: #4C3D8F;
             color: white;
             border: 1px solid #000;
             padding: 0;
@@ -253,7 +253,7 @@ All Rights Reserved. See LICENSE file for terms.
             left: 2px;
             bottom: 2px;
             width: 80px;
-            background-color: #2196F3;
+            background-color: #6B46B8;
             color: white;
             border: 1px solid #000;
             padding: 0;
@@ -276,7 +276,7 @@ All Rights Reserved. See LICENSE file for terms.
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background-color: #333;
+            background-color: #1A1A1A;
             border: 4px solid #000;
             padding: 20px;
             display: none;
@@ -303,12 +303,12 @@ All Rights Reserved. See LICENSE file for terms.
         }
         
         #rulesModal ul {
-            color: #ccc;
+            color: #9B8EC7;
             line-height: 1.6;
         }
         
         #closeRulesBtn {
-            background-color: #4CAF50;
+            background-color: #6B46B8;
             color: white;
             border: 3px solid #000;
             padding: 10px 20px;
@@ -364,7 +364,7 @@ All Rights Reserved. See LICENSE file for terms.
             </div>
         </div>
         
-        <div style="background-color: #1a1a1a; padding: 2px 5px; text-align: center; font-size: 8px; color: #666; flex-shrink: 0; line-height: 1.2;">
+        <div style="background-color: #1a1a1a; padding: 2px 5px; text-align: center; font-size: 8px; color: #9B8EC7; flex-shrink: 0; line-height: 1.2;">
             © 2020-2025 T.Hanlon & C.Guzman | <a href="https://github.com/JUSTGameStudios/just-game/blob/main/LICENSE" style="color: #888; text-decoration: none;">License</a>
         </div>
     </div>
@@ -411,7 +411,7 @@ All Rights Reserved. See LICENSE file for terms.
         <h2>Select Game Mode</h2>
         <div style="margin: 20px 0;">
             <button class="series-btn" data-value="1" style="
-                background-color: #4CAF50;
+                background-color: #6B46B8;
                 color: white;
                 border: 3px solid #000;
                 padding: 15px 30px;
@@ -425,7 +425,7 @@ All Rights Reserved. See LICENSE file for terms.
                 transition: all 0.1s;
             ">BEST OF 1</button>
             <button class="series-btn" data-value="3" style="
-                background-color: #2196F3;
+                background-color: #6B46B8;
                 color: white;
                 border: 3px solid #000;
                 padding: 15px 30px;
@@ -439,7 +439,7 @@ All Rights Reserved. See LICENSE file for terms.
                 transition: all 0.1s;
             ">BEST OF 3</button>
             <button class="series-btn" data-value="5" style="
-                background-color: #ff9800;
+                background-color: #4C3D8F;
                 color: white;
                 border: 3px solid #000;
                 padding: 15px 30px;
@@ -500,12 +500,12 @@ All Rights Reserved. See LICENSE file for terms.
         }
         
         function clearCanvas() {
-            ctx.fillStyle = '#0a0a0a';
+            ctx.fillStyle = '#000000';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
         }
         
         function drawHorizontalDividers() {
-            ctx.strokeStyle = '#ff0000';
+            ctx.strokeStyle = '#9B8EC7';
             ctx.lineWidth = 2;
             gameState.horizontalDividers.forEach(y => {
                 ctx.beginPath();
@@ -533,16 +533,16 @@ All Rights Reserved. See LICENSE file for terms.
             } else if (gameState.phase === 'evaluating' || gameState.phase === 'showing_result') {
                 // Show both lines
                 if (gameState.lines[0]) {
-                    drawLine(gameState.lines[0], '#00ff00');
+                    drawLine(gameState.lines[0], '#6B46B8');
                 }
                 if (gameState.lines[1]) {
-                    drawLine(gameState.lines[1], '#0099ff');
+                    drawLine(gameState.lines[1], '#4C3D8F');
                 }
             }
             
             // Draw current drawing line
             if (gameState.drawingLine) {
-                drawLine(gameState.drawingLine, gameState.currentPlayer === 1 ? '#00ff00' : '#0099ff');
+                drawLine(gameState.drawingLine, gameState.currentPlayer === 1 ? '#6B46B8' : '#4C3D8F');
             }
         }
         
