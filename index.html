@@ -460,22 +460,30 @@ All Rights Reserved. See LICENSE file for terms.
         }
         
         function drawLine(line, color) {
+            debugLog(`DrawLine: x=${gameState.xCoordinate}, start=${line.start}, end=${line.end}, color=${color}`);
             ctx.strokeStyle = color;
             ctx.lineWidth = 4;
             ctx.beginPath();
             ctx.moveTo(gameState.xCoordinate, line.start);
             ctx.lineTo(gameState.xCoordinate, line.end);
             ctx.stroke();
+            
+            // Add a test rectangle to see if anything renders
+            ctx.fillStyle = 'red';
+            ctx.fillRect(gameState.xCoordinate - 10, line.start, 20, 20);
         }
         
         function redraw() {
+            debugLog(`Redraw: canvas=${canvas.width}x${canvas.height}, lines=${gameState.lines.length}`);
             clearCanvas();
             drawHorizontalDividers();
             
             if (gameState.phase === 'drawing' && gameState.currentPlayer === 2) {
                 // Don't show player 1's line
+                debugLog('Phase: hiding player 1 line');
             } else if (gameState.phase === 'evaluating' || gameState.phase === 'showing_result') {
                 // Show both lines
+                debugLog(`Phase: showing lines - line1=${!!gameState.lines[0]}, line2=${!!gameState.lines[1]}`);
                 if (gameState.lines[0]) {
                     drawLine(gameState.lines[0], '#00ff00');
                 }
