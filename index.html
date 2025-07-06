@@ -227,15 +227,16 @@
     
     <div id="resultModal">
         <div id="resultText"></div>
-        <button id="continueBtn">Continue</button>
+        <button id="continueBtn">Continue (auto in 3s)</button>
     </div>
     
     <div id="rulesModal">
-        <h2>TEST VERSION</h2>
         <h2>How to Play Just</h2>
         <ul>
-            <li><strong>Player 1</strong> draws a vertical line of any length</li>
-            <li>The line is hidden while <strong>Player 2</strong> draws their line</li>
+            <li><strong>All lines are drawn vertically at the same position</strong> (center of the screen)</li>
+            <li><strong>Player 1</strong> draws their line in secret</li>
+            <li>Player 1's line is hidden while <strong>Player 2</strong> draws their line</li>
+            <li>Both players can look at the screen once Player 2 finishes</li>
             <li><strong>Winner is determined by:</strong>
                 <ul>
                     <li>If one line fits entirely within the other → <em>smaller line wins</em></li>
@@ -243,7 +244,8 @@
                     <li>If lines partially overlap → <em>"JUST" (draw)</em> and a red divider appears</li>
                 </ul>
             </li>
-            <li>Lines cannot cross red dividers - they will stop at the divider</li>
+            <li>Red dividers block future lines - lines cannot cross them</li>
+            <li>After a winner is determined, a new game starts automatically</li>
         </ul>
         <button id="closeRulesBtn">Got it!</button>
     </div>
@@ -391,6 +393,11 @@
             gameState.phase = 'showing_result';
             redraw();
             
+            // Clear dividers when there's a winner
+            if (result.winner !== 0) {
+                gameState.horizontalDividers = [];
+            }
+            
             if (result.winner === 1) {
                 resultText.textContent = "Player 1 Wins!\n" + result.reason;
                 gameState.scores.player1++;
@@ -406,6 +413,14 @@
             
             updateScoreboard();
             resultModal.style.display = 'block';
+            
+            // Auto-continue after 3 seconds
+            setTimeout(() => {
+                if (resultModal.style.display === 'block') {
+                    resultModal.style.display = 'none';
+                    nextRound();
+                }
+            }, 3000);
         }
         
         function updateScoreboard() {
