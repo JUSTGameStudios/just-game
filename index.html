@@ -32,7 +32,6 @@ All Rights Reserved. See LICENSE file for terms.
             background-color: #1a1a1a;
             color: #ffffff;
             font-family: monospace, 'Courier New', Courier;
-            touch-action: none;
             overflow: hidden;
             image-rendering: pixelated;
             image-rendering: -moz-crisp-edges;
@@ -94,6 +93,7 @@ All Rights Reserved. See LICENSE file for terms.
             flex: 1;
             position: relative;
             background-color: #0a0a0a;
+            overflow: hidden;
         }
         
         #gameCanvas {
@@ -103,8 +103,10 @@ All Rights Reserved. See LICENSE file for terms.
             width: 100%;
             height: 100%;
             pointer-events: auto;
-            z-index: 1;
+            z-index: 10;
             cursor: crosshair;
+            border: 2px solid red;
+            background-color: rgba(0,255,0,0.1);
         }
         
         #scoreBoard {
@@ -786,6 +788,15 @@ All Rights Reserved. See LICENSE file for terms.
         // Add test listener to see if canvas receives any events
         canvas.addEventListener('click', testCanvasEvent);
         canvas.addEventListener('pointerdown', testCanvasEvent);
+        
+        // Test if container receives events
+        const canvasContainer = document.getElementById('canvasContainer');
+        canvasContainer.addEventListener('click', function(e) {
+            debugLog('Container clicked');
+        });
+        canvasContainer.addEventListener('touchstart', function(e) {
+            debugLog('Container touched');
+        });
         
         continueBtn.addEventListener('click', () => {
             resultModal.style.display = 'none';
