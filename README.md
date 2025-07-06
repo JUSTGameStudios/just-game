@@ -2,6 +2,8 @@
 
 A simple two-player game where players draw vertical lines and compete based on line positioning.
 
+**Copyright © 2024 Taylor Hanlon & Cesar Guzman. All Rights Reserved.**
+
 ## How to Play
 
 1. Player 1 draws a vertical line of any length
@@ -37,3 +39,21 @@ A simple two-player game where players draw vertical lines and compete based on 
 - Pure JavaScript (no dependencies)
 - Responsive design for mobile devices
 - Works in Termux on Android
+- Progressive Web App (PWA) support
+
+## License
+
+This game is protected under a custom restrictive license. See the [LICENSE](LICENSE) file for details.
+
+**Key points:**
+- ✅ Free for personal, non-commercial use
+- ✅ Educational use allowed
+- ❌ Commercial use prohibited without permission
+- ❌ Distribution on app stores prohibited without permission
+- ❌ Creating commercial derivatives prohibited
+
+For commercial licensing inquiries, contact: JustGameStudios@outlook.com
+
+## Credits
+
+Game concept by Taylor Hanlon & Cesar Guzman
