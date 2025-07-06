@@ -12,7 +12,7 @@ Just is a strategic two-player game where players draw vertical lines at the sam
 
 ```
 just/
-├── index.html         # Complete game client (810 lines - HTML + CSS + JavaScript)
+├── index.html         # Complete game client (760+ lines - HTML + CSS + JavaScript)
 ├── server.js          # HTTP development server (27 lines)
 ├── https-server.js    # HTTPS server for PWA testing (45 lines)
 ├── sw.js              # Service worker for PWA caching (78 lines)
@@ -115,15 +115,17 @@ gameState = {
 - **Mobile Responsive**: Scales for different screen sizes
 
 #### Result Modal (`index.html:228-232`)
+- **Side-positioned**: Located on right side to keep lines visible
 - **Win Announcement**: Player victory or JUST notification
 - **Dynamic Buttons**: "Continue", "Next Game", or "New Series"
-- **Auto-sizing**: Adapts to message length
+- **Responsive Design**: Scales from 180px to 110px width based on screen size
+- **Non-obstructive**: Players can view drawn lines while modal is open
 
 ### Progressive Web App Features
 
 #### Service Worker (`sw.js:1-78`)
 - **Cache Strategy**: Cache-first with network fallback
-- **Versioned Caching**: `just-game-v15` for cache busting
+- **Versioned Caching**: `just-game-v27` for cache busting
 - **Offline Support**: Full game playable offline
 - **Asset Caching**: HTML, manifest, and all resources
 
@@ -167,7 +169,16 @@ node https-server.js              # Runs on https://localhost:8443
 ### Production Deployment
 - **GitHub Pages**: https://JUSTGameStudios.github.io/just-game/
 - **HTTPS Required**: For PWA functionality on mobile
-- **Cache Versioning**: Update `sw.js` cache name for deployments
+- **Cache Versioning**: **CRITICAL** - Update `sw.js` cache name for deployments
+
+### PWA Cache Busting (IMPORTANT)
+**Every time you make changes to the game**, you MUST:
+1. Update the cache version in `sw.js` (e.g., `just-game-v27` → `just-game-v28`)
+2. Commit and push the service worker change
+3. This forces PWA users to download the updated version
+4. Without this, users will see the old cached version indefinitely
+
+**Current Version**: `just-game-v27` (as of latest update)
 
 ### Testing
 - **No Build Process**: Direct file deployment
@@ -239,18 +250,33 @@ node https-server.js              # Runs on https://localhost:8443
 
 ### Maintenance
 - **Version Control**: Git with GitHub hosting
-- **Cache Busting**: Manual service worker version updates
+- **Cache Busting**: **ESSENTIAL** - Manual service worker version updates for every deployment
 - **Mobile Testing**: Regular testing on various devices
 - **PWA Compliance**: Follows web app manifest standards
+
+### Recent Changes & Lessons Learned
+
+#### Modal Design Evolution
+- **Problem**: Original result modal covered drawn lines, preventing players from viewing results
+- **Solution**: Repositioned modal to right side of screen using available space
+- **Benefit**: Players can simultaneously view game results and drawn lines
+- **Implementation**: CSS positioning with responsive breakpoints for different screen sizes
+
+#### Service Worker Cache Management
+- **Critical Issue**: Forgetting to update cache version leaves users with old versions
+- **Solution**: Always increment cache version number in `sw.js` after any changes
+- **Best Practice**: Make cache version updates part of standard commit workflow
+- **Verification**: Check Network tab in DevTools to confirm new version loaded
 
 ## Common Tasks
 
 ### Adding Features
 1. Update game logic in `index.html`
-2. Increment service worker cache version in `sw.js`
+2. **CRITICAL**: Increment service worker cache version in `sw.js`
 3. Test locally with both HTTP and HTTPS servers
-4. Deploy to GitHub Pages
+4. Commit and push changes to GitHub
 5. Test PWA functionality on mobile devices
+6. Verify cache busting worked by checking network requests in DevTools
 
 ### Debugging
 - **Game Logic**: Use browser console and breakpoints
@@ -265,3 +291,33 @@ node https-server.js              # Runs on https://localhost:8443
 - **Mobile**: Test on various devices and screen sizes
 
 This codebase represents a complete, production-ready game with modern web standards, mobile optimization, and PWA capabilities while maintaining a simple, dependency-free architecture.
+
+---
+
+## Quick Reference for Claude Code
+
+### Essential Commands
+```bash
+# Start development server
+node server.js
+
+# Test PWA with HTTPS
+node https-server.js
+
+# Standard deployment workflow
+git add -A
+git commit -m "Description of changes"
+git push origin main
+```
+
+### PWA Update Checklist
+- [ ] Update cache version in `sw.js`
+- [ ] Commit and push changes
+- [ ] Test on mobile device
+- [ ] Verify cache busting in DevTools
+
+### File Priorities for Changes
+1. **`index.html`** - Main game implementation (all logic, UI, styling)
+2. **`sw.js`** - Service worker (update version after every change)
+3. **`manifest.json`** - PWA configuration (rarely changed)
+4. **`CLAUDE.md`** - Documentation (update for significant changes)
