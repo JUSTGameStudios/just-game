@@ -287,10 +287,11 @@ All Rights Reserved. See LICENSE file for terms.
         <div id="header">
             <button id="rulesBtn">Rules</button>
             <button id="resetBtn">New Game</button>
-            <div id="gameTitle">JUST v21</div>
+            <div id="gameTitle" style="background: red; color: yellow;">JUST v22 DEBUG</div>
             <div id="playerInfo">Player 1's Turn</div>
             <div id="instructions">Draw a vertical line</div>
             <div id="debugInfo" style="font-size: 10px; color: #ff0; background: #000; padding: 2px; margin: 2px 0;">Debug: Ready</div>
+            <button id="testDrawBtn" style="background: orange; color: black; padding: 5px;">TEST DRAW</button>
         </div>
         
         <div id="canvasContainer">
@@ -796,6 +797,29 @@ All Rights Reserved. See LICENSE file for terms.
         });
         canvasContainer.addEventListener('touchstart', function(e) {
             debugLog('Container touched');
+        });
+        
+        // Test draw button to bypass canvas events
+        document.getElementById('testDrawBtn').addEventListener('click', function() {
+            debugLog('Test draw button clicked');
+            // Simulate a drawing event
+            gameState.drawingLine = {
+                start: 100,
+                end: 200,
+                player: gameState.currentPlayer
+            };
+            gameState.lines.push({...gameState.drawingLine});
+            gameState.drawingLine = null;
+            
+            if (gameState.currentPlayer === 1) {
+                gameState.currentPlayer = 2;
+                updateUI();
+                redraw();
+            } else {
+                gameState.phase = 'evaluating';
+                const result = evaluateGame();
+                showResult(result);
+            }
         });
         
         continueBtn.addEventListener('click', () => {
