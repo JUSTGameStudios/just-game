@@ -2,7 +2,7 @@
 
 A simple two-player game where players draw vertical lines and compete based on line positioning.
 
-**Copyright © 2024 Taylor Hanlon & Cesar Guzman. All Rights Reserved.**
+**Copyright © 2020-2025 Taylor Hanlon & Cesar Guzman. All Rights Reserved.**
 
 ## How to Play
 
