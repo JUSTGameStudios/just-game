@@ -656,14 +656,6 @@ All Rights Reserved. See LICENSE file for terms.
             if (confirm('Start a new series? This will reset all scores.')) {
                 seriesModal.style.display = 'block';
                 resultModal.style.display = 'none';
-                    scores: { player1: 0, player2: 0 },
-                    rounds: 0,
-                    drawingLine: null,
-                    xCoordinate: canvas.width / 2,
-                    hasWinner: false,
-                    bestOf: 1,
-                    seriesStarted: false
-                };
             }
         });
         
