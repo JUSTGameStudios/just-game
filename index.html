@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Just - The Line Game</title>
+    
+    <!-- PWA Meta Tags -->
+    <meta name="description" content="A simple two-player line drawing game">
+    <meta name="theme-color" content="#2a2a2a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Just">
+    <meta name="mobile-web-app-capable" content="yes">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="./manifest.json">
+    
+    <!-- PWA Icons -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiBmaWxsPSIjMWExYTFhIi8+CjxsaW5lIHgxPSIxNiIgeTE9IjgiIHgyPSIxNiIgeTI9IjI0IiBzdHJva2U9IiMwMGZmMDAiIHN0cm9rZS13aWR0aD0iMiIvPgo8bGluZSB4MT0iMTYiIHkxPSIxMiIgeDI9IjE2IiB5Mj0iMjAiIHN0cm9rZT0iIzAwOTlmZiIgc3Ryb2tlLXdpZHRoPSIyIi8+Cjwvc3ZnPg==">
+    <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgwIiBoZWlnaHQ9IjE4MCIgdmlld0JveD0iMCAwIDE4MCAxODAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxODAiIGhlaWdodD0iMTgwIiBmaWxsPSIjMWExYTFhIi8+CjxsaW5lIHgxPSI5MCIgeTE9IjQ1IiB4Mj0iOTAiIHkyPSIxMzUiIHN0cm9rZT0iIzAwZmYwMCIgc3Ryb2tlLXdpZHRoPSI4Ii8+CjxsaW5lIHgxPSI5MCIgeTE9IjY3LjUiIHgyPSI5MCIgeTI9IjExMi41IiBzdHJva2U9IiMwMDk5ZmYiIHN0cm9rZS13aWR0aD0iOCIvPgo8L3N2Zz4K">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #1a1a1a;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            touch-action: none;
+            overflow: hidden;
+        }
+        
+        #gameContainer {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            width: 100vw;
+        }
+        
+        #header {
+            background-color: #2a2a2a;
+            padding: 10px;
+            text-align: center;
+            border-bottom: 2px solid #444;
+        }
+        
+        #playerInfo {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        #instructions {
+            font-size: 14px;
+            color: #aaa;
+        }
+        
+        #canvasContainer {
+            flex: 1;
+            position: relative;
+            background-color: #0a0a0a;
+        }
+        
+        #gameCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        #scoreBoard {
+            background-color: #2a2a2a;
+            padding: 10px;
+            display: flex;
+            justify-content: space-around;
+            border-top: 2px solid #444;
+        }
+        
+        .score {
+            text-align: center;
+        }
+        
+        .score-label {
+            font-size: 12px;
+            color: #888;
+        }
+        
+        .score-value {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        #resultModal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #333;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            display: none;
+            z-index: 1000;
+            box-shadow: 0 0 20px rgba(0,0,0,0.8);
+        }
+        
+        #resultText {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        
+        #continueBtn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 18px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        #continueBtn:active {
+            background-color: #45a049;
+        }
+        
+        #resetBtn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-size: 12px;
+        }
+        
+        #rulesBtn {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-size: 12px;
+        }
+        
+        #rulesModal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #333;
+            padding: 20px;
+            border-radius: 10px;
+            display: none;
+            z-index: 1000;
+            box-shadow: 0 0 20px rgba(0,0,0,0.8);
+            max-width: 90vw;
+            width: 400px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        @media (max-width: 480px) {
+            #rulesModal {
+                width: 95vw;
+                padding: 15px;
+                max-height: 85vh;
+            }
+        }
+        
+        #rulesModal h2 {
+            margin-top: 0;
+            color: #fff;
+            text-align: center;
+        }
+        
+        #rulesModal ul {
+            color: #ccc;
+            line-height: 1.6;
+        }
+        
+        #closeRulesBtn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: block;
+            margin: 20px auto 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="gameContainer">
+        <div id="header">
+            <button id="rulesBtn">Rules</button>
+            <button id="resetBtn">New Game</button>
+            <div id="playerInfo">Player 1's Turn</div>
+            <div id="instructions">Draw a vertical line</div>
+        </div>
+        
+        <div id="canvasContainer">
+            <canvas id="gameCanvas"></canvas>
+        </div>
+        
+        <div id="scoreBoard">
+            <div class="score">
+                <div class="score-label">Player 1</div>
+                <div class="score-value" id="score1">0</div>
+            </div>
+            <div class="score">
+                <div class="score-label">Rounds</div>
+                <div class="score-value" id="rounds">0</div>
+            </div>
+            <div class="score">
+                <div class="score-label">Player 2</div>
+                <div class="score-value" id="score2">0</div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="resultModal">
+        <div id="resultText"></div>
+        <button id="continueBtn">Continue</button>
+    </div>
+    
+    <div id="rulesModal">
+        <h2>TEST VERSION</h2>
+        <h2>How to Play Just</h2>
+        <ul>
+            <li><strong>Player 1</strong> draws a vertical line of any length</li>
+            <li>The line is hidden while <strong>Player 2</strong> draws their line</li>
+            <li><strong>Winner is determined by:</strong>
+                <ul>
+                    <li>If one line fits entirely within the other → <em>smaller line wins</em></li>
+                    <li>If lines don't overlap → <em>longer line wins</em></li>
+                    <li>If lines partially overlap → <em>"JUST" (draw)</em> and a red divider appears</li>
+                </ul>
+            </li>
+            <li>Lines cannot cross red dividers - they will stop at the divider</li>
+        </ul>
+        <button id="closeRulesBtn">Got it!</button>
+    </div>
+    
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const playerInfo = document.getElementById('playerInfo');
+        const instructions = document.getElementById('instructions');
+        const resultModal = document.getElementById('resultModal');
+        const resultText = document.getElementById('resultText');
+        const continueBtn = document.getElementById('continueBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const score1El = document.getElementById('score1');
+        const score2El = document.getElementById('score2');
+        const roundsEl = document.getElementById('rounds');
+        
+        let gameState = {
+            currentPlayer: 1,
+            phase: 'drawing', // 'drawing', 'evaluating', 'showing_result'
+            lines: [],
+            horizontalDividers: [],
+            scores: { player1: 0, player2: 0 },
+            rounds: 0,
+            drawingLine: null,
+            xCoordinate: null
+        };
+        
+        function resizeCanvas() {
+            const container = document.getElementById('canvasContainer');
+            canvas.width = container.clientWidth;
+            canvas.height = container.clientHeight;
+            if (gameState.xCoordinate === null) {
+                gameState.xCoordinate = canvas.width / 2;
+            }
+            redraw();
+        }
+        
+        function clearCanvas() {
+            ctx.fillStyle = '#0a0a0a';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+        
+        function drawHorizontalDividers() {
+            ctx.strokeStyle = '#ff0000';
+            ctx.lineWidth = 2;
+            gameState.horizontalDividers.forEach(y => {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(canvas.width, y);
+                ctx.stroke();
+            });
+        }
+        
+        function drawLine(line, color) {
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.moveTo(gameState.xCoordinate, line.start);
+            ctx.lineTo(gameState.xCoordinate, line.end);
+            ctx.stroke();
+        }
+        
+        function redraw() {
+            clearCanvas();
+            drawHorizontalDividers();
+            
+            if (gameState.phase === 'drawing' && gameState.currentPlayer === 2) {
+                // Don't show player 1's line
+            } else if (gameState.phase === 'evaluating' || gameState.phase === 'showing_result') {
+                // Show both lines
+                if (gameState.lines[0]) {
+                    drawLine(gameState.lines[0], '#00ff00');
+                }
+                if (gameState.lines[1]) {
+                    drawLine(gameState.lines[1], '#0099ff');
+                }
+            }
+            
+            // Draw current drawing line
+            if (gameState.drawingLine) {
+                drawLine(gameState.drawingLine, gameState.currentPlayer === 1 ? '#00ff00' : '#0099ff');
+            }
+        }
+        
+        function isValidLine(line) {
+            // Check if line crosses any horizontal dividers
+            for (let dividerY of gameState.horizontalDividers) {
+                if ((line.start < dividerY && line.end > dividerY) || 
+                    (line.start > dividerY && line.end < dividerY)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        
+        function evaluateGame() {
+            const line1 = gameState.lines[0];
+            const line2 = gameState.lines[1];
+            
+            const line1Top = Math.min(line1.start, line1.end);
+            const line1Bottom = Math.max(line1.start, line1.end);
+            const line2Top = Math.min(line2.start, line2.end);
+            const line2Bottom = Math.max(line2.start, line2.end);
+            
+            // Check if one line is entirely within the other
+            const line1InLine2 = line1Top >= line2Top && line1Bottom <= line2Bottom;
+            const line2InLine1 = line2Top >= line1Top && line2Bottom <= line1Bottom;
+            
+            if (line1InLine2 && !line2InLine1) {
+                return { winner: 1, reason: "Player 1's line fits entirely within Player 2's line" };
+            } else if (line2InLine1 && !line1InLine2) {
+                return { winner: 2, reason: "Player 2's line fits entirely within Player 1's line" };
+            } else if (line1InLine2 && line2InLine1) {
+                // Both lines are identical
+                return { winner: 0, reason: "JUST! Lines are identical" };
+            }
+            
+            // Check if lines overlap at all
+            // Lines touching at exactly the same point (like at a red divider) should not count as overlapping
+            const overlap = !(line1Bottom <= line2Top || line2Bottom <= line1Top);
+            
+            if (!overlap) {
+                // No overlap - longer line wins
+                const line1Length = line1Bottom - line1Top;
+                const line2Length = line2Bottom - line2Top;
+                if (line1Length > line2Length) {
+                    return { winner: 1, reason: "No overlap - Player 1's line is longer" };
+                } else if (line2Length > line1Length) {
+                    return { winner: 2, reason: "No overlap - Player 2's line is longer" };
+                } else {
+                    return { winner: 0, reason: "JUST! Lines are equal length with no overlap" };
+                }
+            }
+            
+            // Lines overlap but neither contains the other - it's a JUST
+            const overlapTop = Math.max(line1Top, line2Top);
+            const overlapBottom = Math.min(line1Bottom, line2Bottom);
+            const midpoint = (overlapTop + overlapBottom) / 2;
+            
+            return { winner: 0, reason: "JUST! Lines overlap partially", dividerY: midpoint };
+        }
+        
+        function showResult(result) {
+            gameState.phase = 'showing_result';
+            redraw();
+            
+            if (result.winner === 1) {
+                resultText.textContent = "Player 1 Wins!\n" + result.reason;
+                gameState.scores.player1++;
+            } else if (result.winner === 2) {
+                resultText.textContent = "Player 2 Wins!\n" + result.reason;
+                gameState.scores.player2++;
+            } else {
+                resultText.textContent = "JUST!\n" + result.reason;
+                if (result.dividerY !== undefined) {
+                    gameState.horizontalDividers.push(result.dividerY);
+                }
+            }
+            
+            updateScoreboard();
+            resultModal.style.display = 'block';
+        }
+        
+        function updateScoreboard() {
+            score1El.textContent = gameState.scores.player1;
+            score2El.textContent = gameState.scores.player2;
+            roundsEl.textContent = gameState.rounds;
+        }
+        
+        function nextRound() {
+            gameState.rounds++;
+            gameState.currentPlayer = 1;
+            gameState.phase = 'drawing';
+            gameState.lines = [];
+            updateUI();
+            redraw();
+        }
+        
+        function updateUI() {
+            playerInfo.textContent = `Player ${gameState.currentPlayer}'s Turn`;
+            if (gameState.phase === 'drawing') {
+                instructions.textContent = 'Draw a vertical line';
+            }
+        }
+        
+        function handleStart(e) {
+            if (gameState.phase !== 'drawing') return;
+            
+            e.preventDefault();
+            const rect = canvas.getBoundingClientRect();
+            const y = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
+            
+            gameState.drawingLine = {
+                start: y,
+                end: y,
+                player: gameState.currentPlayer
+            };
+        }
+        
+        function handleMove(e) {
+            if (!gameState.drawingLine || gameState.phase !== 'drawing') return;
+            
+            e.preventDefault();
+            const rect = canvas.getBoundingClientRect();
+            let y = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
+            
+            // Stop line drawing at red dividers
+            const startY = gameState.drawingLine.start;
+            for (let dividerY of gameState.horizontalDividers) {
+                // Check if we're trying to cross a divider
+                if ((startY < dividerY && y > dividerY) || (startY > dividerY && y < dividerY)) {
+                    // Stop at the divider line
+                    y = dividerY;
+                    break;
+                }
+            }
+            
+            gameState.drawingLine.end = y;
+            redraw();
+        }
+        
+        function handleEnd(e) {
+            if (!gameState.drawingLine || gameState.phase !== 'drawing') return;
+            
+            e.preventDefault();
+            
+            
+            // Ensure line has some minimum length
+            const lineLength = Math.abs(gameState.drawingLine.end - gameState.drawingLine.start);
+            if (lineLength < 10) {
+                alert("Line is too short!");
+                gameState.drawingLine = null;
+                redraw();
+                return;
+            }
+            
+            // Save the line
+            gameState.lines.push({...gameState.drawingLine});
+            gameState.drawingLine = null;
+            
+            if (gameState.currentPlayer === 1) {
+                gameState.currentPlayer = 2;
+                updateUI();
+                redraw();
+            } else {
+                // Both players have drawn - evaluate
+                gameState.phase = 'evaluating';
+                const result = evaluateGame();
+                showResult(result);
+            }
+        }
+        
+        // Event listeners
+        canvas.addEventListener('mousedown', handleStart);
+        canvas.addEventListener('mousemove', handleMove);
+        canvas.addEventListener('mouseup', handleEnd);
+        canvas.addEventListener('touchstart', handleStart);
+        canvas.addEventListener('touchmove', handleMove);
+        canvas.addEventListener('touchend', handleEnd);
+        
+        continueBtn.addEventListener('click', () => {
+            resultModal.style.display = 'none';
+            nextRound();
+        });
+        
+        resetBtn.addEventListener('click', () => {
+            if (confirm('Start a new game? This will reset all scores.')) {
+                gameState = {
+                    currentPlayer: 1,
+                    phase: 'drawing',
+                    lines: [],
+                    horizontalDividers: [],
+                    scores: { player1: 0, player2: 0 },
+                    rounds: 0,
+                    drawingLine: null,
+                    xCoordinate: canvas.width / 2
+                };
+                resultModal.style.display = 'none';
+                updateUI();
+                updateScoreboard();
+                redraw();
+            }
+        });
+        
+        const rulesBtn = document.getElementById('rulesBtn');
+        const rulesModal = document.getElementById('rulesModal');
+        const closeRulesBtn = document.getElementById('closeRulesBtn');
+        
+        rulesBtn.addEventListener('click', () => {
+            rulesModal.style.display = 'block';
+        });
+        
+        closeRulesBtn.addEventListener('click', () => {
+            rulesModal.style.display = 'none';
+        });
+        
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+        updateScoreboard();
+        
+        // Register service worker for PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(registration => {
+                        console.log('SW registered: ', registration);
+                    })
+                    .catch(registrationError => {
+                        console.log('SW registration failed: ', registrationError);
+                    });
+            });
+        }
+    </script>
+</body>
+</html>
