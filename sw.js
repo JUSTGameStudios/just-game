@@ -1,4 +1,4 @@
-const CACHE_NAME = 'just-game-v6';
+const CACHE_NAME = 'just-game-v7';
 const urlsToCache = [
   './',
   './index.html',
